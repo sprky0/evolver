@@ -1,4 +1,4 @@
-require(['js/model'],function(Model){
+define('evolver/evolver',['evolver/model'],function(Model){
 
 	function getModel() {
 		return new Model();
@@ -8,9 +8,6 @@ require(['js/model'],function(Model){
 		return model.getChild();
 	}
 
-	/**
-	 * @param object Individual
-	 */
 	function getGeneration(parent, count) {
 		count = count || 5;
 		var generation = [];

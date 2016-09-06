@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<script type="text/javascript" src="evolver/vendor/require.js"></script>
+<script>
+require(['evolver/evolver'],function(evolver) {
+
+	var cubes = evolver.getModel();
+	cubes.addField('innerBrightness','uint8', 127, 1, .1);
+	cubes.addField('outerBrightness','uint8', 127, 1, .1);
+
+	console.log(cubes);
+
+});
+</script>
+
+
+</body>
+</html>
