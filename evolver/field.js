@@ -1,6 +1,6 @@
 define('evolver/field',[],function(){
 
-	var Field = function(name, type, referenceValue, changeRatePercent, changeProbability) {
+	var Field = function(name, type, referenceValue, changeRatePercent, changeProbabilityPercent, mutation) {
 
 		this.name = name;
 		this.type = type;
@@ -9,8 +9,8 @@ define('evolver/field',[],function(){
 		this.isFloat = false;
 		this.isSigned = false;
 		this.isNumeric = true;
-		this.changeRatePercent = 0;
-		this.changeProbability = 0;
+		this.changeRatePercent = changeRatePercent || 0;
+		this.changeProbabilityPercent = changeProbabilityPercent || 0;
 		this.value = 0;
 
 		/**
@@ -56,7 +56,11 @@ define('evolver/field',[],function(){
 
 		}
 
-		this.setWithRandomizedValue(referenceValue);
+		if (mutation) {
+			this.setWithRandomizedValue(referenceValue);
+		} else {
+			this.setValue(referenceValue);
+		}
 
 	};
 
@@ -68,7 +72,10 @@ define('evolver/field',[],function(){
 
 		// Flatten out remainer for integers
 		if (!this.isFloat && this.isNumeric)
-			value = Math.floor();
+			value = parseInt(value);
+
+		if (this.isFloat && this.isNumeric)
+			value = parseFloat(value);
 
 		// set our value to a boolean based on JS truthiness rules
 		if (this.isBoolean)
@@ -78,13 +85,13 @@ define('evolver/field',[],function(){
 	};
 
 	Field.prototype.cloneWithRandomizedValue = function() {
-		return new Field(this.name, this.type, this.referenceValue, this.changeRatePercent, this.changeProbability);
+		return new Field(this.name, this.type, this.value, this.changeRatePercent, this.changeProbabilityPercent);
 	};
 
-	Field.prototype.setWithRandomizedValue = function(reference) {
+	Field.prototype.setWithRandomizedValue = function(referenceValue) {
 
 		// generate a value within initial parameters
-		if (!reference) {
+		if (!referenceValue) {
 			var representitiveValue = Math.random() * (this.ceil - this.floor) + this.floor;
 			this.setValue(representitiveValue);
 		}
@@ -92,25 +99,18 @@ define('evolver/field',[],function(){
 		// use reference and settings to apply a new value
 		else {
 
-
-			// get a random variance which is a random value relative to the max changeRatePercent allowed
-			// multipled by the reference value
-
-			var changeAmount = (this.ChangeRatePercent / 100) * (this.ceil + this.floor);
-			var willChange = Math.random() > this.changeProbability;
+			// decide if we will change at all
+			var willChange = (Math.random() * 100) > this.changeProbabilityPercent;
 
 			if (willChange) {
-
+				// get a random variance which is a random value relative to the max changeRatePercent allowed
+				// multipled by the reference value
+				var changeAmount = (this.changeRatePercent / 100) * (this.ceil + this.floor);
+				console.log( willChange, changeAmount, referenceValue );
+				var newValue = changeAmount *= referenceValue;
+				console.log( "to", newValue );
+				this.setValue(newValue);
 			}
-
-			var newValue = Math.random() * (this.ceil - this.floor) + this.floor;
-
-			console.log(newValue);
-			console.log(this.ceil, this.floor);
-
-			this.setValue(newValue);
-
-			console.log(this.value);
 
 		}
 

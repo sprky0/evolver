@@ -6,11 +6,13 @@
 <script>
 require(['evolver/evolver'],function(evolver) {
 
-	var cubes = evolver.getModel();
-	cubes.addField('innerBrightness','uint8', 127, 1, .1);
-	cubes.addField('outerBrightness','uint8', 127, 1, .1);
+	var m = evolver.getModel();
+	m.addField('val','uint8', 127, .001, .001);
 
-	console.log(cubes);
+	for(var i = 0; i < 100; i++) {
+		console.log(m.generation, m.fields[0].value);
+		m = m.generateChild();
+	}
 
 });
 </script>

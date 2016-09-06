@@ -16,7 +16,7 @@ define('evolver/model',['evolver/field'],function(Field){
 		// if (parent.prototype.className = Model) // something like this
 		if (parent) {
 			this.initFieldsAndEvolveFromParentValues(parent);
-			this.generation = parent.generation++;
+			this.generation = parent.generation + 1;
 		} else {
 			this.generation = 0;
 		}
@@ -42,8 +42,8 @@ define('evolver/model',['evolver/field'],function(Field){
 	 * @param String type uint7|uint8|uint16|boolean
 	 *
 	 */
-	Model.prototype.addField = function(name, type, defaultValue, changeRatePercent, changeProbability) {
-		var fieldInstance = new Field(name, type, defaultValue, changeRatePercent, changeProbability);
+	Model.prototype.addField = function(name, type, referenceValue, changeRatePercent, changeProbabilityPercent, mutation) {
+		var fieldInstance = new Field(name, type, referenceValue, changeRatePercent, changeProbabilityPercent, mutation);
 		if (this.fieldMap.hasOwnProperty(name))
 			throw 'Re-used field name!';
 		this.fieldMap[name] = fieldInstance;
@@ -55,15 +55,20 @@ define('evolver/model',['evolver/field'],function(Field){
 	};
 	*/
 
+	/**
+	 * clone all the parent fields allowing for mutation
+	 */
 	Model.prototype.initFieldsAndEvolveFromParentValues = function(parent) {
 
 		for(var i = 0; i < parent.fields.length; i++) {
 			this.addField(
 				parent.fields[i].name,
 				parent.fields[i].type,
-				parent.fields[i].defaultValue,
+				parent.fields[i].value,
 				parent.fields[i].changeRatePercent,
-				parent.fields[i].changeProbability);
+				parent.fields[i].changeProbabilityPercent,
+				true // mutate on
+			);
 		}
 
 	};
