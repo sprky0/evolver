@@ -106,10 +106,13 @@ define('evolver/field',[],function(){
 				// get a random variance which is a random value relative to the max changeRatePercent allowed
 				// multipled by the reference value
 				var changeAmount = (this.changeRatePercent / 100) * (this.ceil + this.floor);
-				console.log( willChange, changeAmount, referenceValue );
-				var newValue = changeAmount *= referenceValue;
-				console.log( "to", newValue );
+				var direction = Math.random() > .5 ? -1 : 1;
+				var newValue = referenceValue + (referenceValue * changeAmount * direction);
+
 				this.setValue(newValue);
+
+				// console.log( willChange, changeAmount, referenceValue, newValue );
+
 			}
 
 		}

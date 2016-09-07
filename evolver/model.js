@@ -42,12 +42,16 @@ define('evolver/model',['evolver/field'],function(Field){
 	 * @param String type uint7|uint8|uint16|boolean
 	 *
 	 */
-	Model.prototype.addField = function(name, type, referenceValue, changeRatePercent, changeProbabilityPercent, mutation) {
-		var fieldInstance = new Field(name, type, referenceValue, changeRatePercent, changeProbabilityPercent, mutation);
+	Model.prototype.addField = function(name, type, referenceValue, changeRatePercent, changeProbabilityPercent, allowMutation) {
+		var fieldInstance = new Field(name, type, referenceValue, changeRatePercent, changeProbabilityPercent, allowMutation);
 		if (this.fieldMap.hasOwnProperty(name))
 			throw 'Re-used field name!';
 		this.fieldMap[name] = fieldInstance;
 		this.fields.push(fieldInstance);
+	};
+
+	Model.prototype.removeField = function(name) {
+
 	};
 
 	/*
