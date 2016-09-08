@@ -9,11 +9,25 @@ html, body {
 	margin: 0;
 	padding: 0;
 }
+
+body {
+	table-layout: fixed;
+}
+
+div {
+	 table-layout: table-row;
+	 width: 100%;
+}
+
 a {
 	box-sizing: content-box;
-	padding: 20px 200px;
-	width:50%;
-	margin: 0;
+	display: table-cell;
+	padding: 10px;
+
+	border: 4px solid transparent;
+}
+a:hover {
+	border-color: green;
 }
 </style>
 <script type="text/javascript" src="evolver/vendor/require.js"></script>
@@ -21,13 +35,16 @@ a {
 require(['evolver/evolver'],function(evolver) {
 
 	var m = evolver.getModel();
-	var d = document.getElementsByTagName('body')[0];
-	var gen = [m];
-	var siblingCount = 2;
+	var b = document.getElementsByTagName('body')[0];
+	var d = document.createElement('section');
+		b.appendChild(d);
 
-	m.addField('r','uint8', 128, .01, 1);
-	m.addField('g','uint8', 128, .01, 1);
-	m.addField('b','uint8', 128, .01, 1);
+	var gen = [m];
+	var siblingCount = 60;
+
+	m.addField('r','uint8', 128, .01, .02);
+	m.addField('g','uint8', 128, .01, .02);
+	m.addField('b','uint8', 128, .01, .02);
 
 	// using gen array, get a new generation
 	function nextGen(generationParentIndex) {
@@ -47,9 +64,13 @@ require(['evolver/evolver'],function(evolver) {
 
 			a.style.backgroundColor = 'rgba(' + r + ',' + g + ','  + b + ',1)';
 			a.innerHTML = ' ';
-			a.onclick = "nextGen(" + j + ")";
+			a.href = "#/evolve-" + gen[j].generation + ':' + j;
 
-			a.href = "#" + j;
+			a.onclick = function(e){
+				e.preventDefault();
+				var target = this.href.split(':').pop();
+				nextGen(target);
+			}
 
 			genRow.appendChild(a);
 
@@ -57,9 +78,6 @@ require(['evolver/evolver'],function(evolver) {
 
 		d.appendChild(genRow);
 
-		// var e = document.createElement('p');
-		// e.innerHTML = m.fields[0].value;
-		// d.appendChild(e);
 	}
 
 	nextGen(0);
