@@ -34,9 +34,11 @@ define('evolver/model',['evolver/field'],function(Field){
 		return new Model(this);
 	};
 
+	/*
 	Model.prototype.evolveFromParent = function() {
 
 	};
+	*/
 
 	/**
 	 * @param String type uint7|uint8|uint16|boolean
@@ -48,6 +50,20 @@ define('evolver/model',['evolver/field'],function(Field){
 			throw 'Re-used field name!';
 		this.fieldMap[name] = fieldInstance;
 		this.fields.push(fieldInstance);
+	};
+
+	Model.prototype.getField = function(name) {
+		if (this.fieldMap.hasOwnProperty(name))
+			return this.fieldMap[name];
+		else
+			throw Exception('unknown Field ' + name);
+	}
+
+	Model.prototype.getFieldValue = function(name) {
+		if (this.fieldMap.hasOwnProperty(name))
+			return this.fieldMap[name].value;
+		else
+			throw Exception('unknown Field ' + name);
 	};
 
 	Model.prototype.removeField = function(name) {

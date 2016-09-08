@@ -2,34 +2,67 @@
 <html>
 <body>
 
+<style>
+html, body {
+	min-height: 100%;
+	min-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+a {
+	box-sizing: content-box;
+	padding: 20px 200px;
+	width:50%;
+	margin: 0;
+}
+</style>
 <script type="text/javascript" src="evolver/vendor/require.js"></script>
 <script>
 require(['evolver/evolver'],function(evolver) {
 
 	var m = evolver.getModel();
-	// var d = document.getElementsByTagName('body')[0];
+	var d = document.getElementsByTagName('body')[0];
+	var gen = [m];
+	var siblingCount = 2;
 
-	m.addField('weight','uint8', 127, .001, .001);
-	m.addField('height','uint8', 0, .001, .001);
+	m.addField('r','uint8', 128, .01, 1);
+	m.addField('g','uint8', 128, .01, 1);
+	m.addField('b','uint8', 128, .01, 1);
 
-	/*
-	function nextGeneration(selected) {
+	// using gen array, get a new generation
+	function nextGen(generationParentIndex) {
 
-	}
-	*/
+		// console.log(m.generation, m.fields[0].value, m.fields[0].name, m.fields[1].value, m.fields[1].name);
+		gen = evolver.getGeneration(gen[generationParentIndex], siblingCount);
 
-	for(var i = 0; i < 100; i++) {
-
-		console.log(m.generation, m.fields[0].value, m.fields[0].name, m.fields[1].value, m.fields[1].name);
-		var gen = getGeneration(m, 5);
+		var genRow = document.createElement('div');
 
 		for(var j = 0; j < gen.length; j++) {
-			d.appendChild(a);
+
+			var a = document.createElement('a');
+
+			var r = gen[j].getFieldValue('r');
+			var g = gen[j].getFieldValue('g');
+			var b = gen[j].getFieldValue('b');
+
+			a.style.backgroundColor = 'rgba(' + r + ',' + g + ','  + b + ',1)';
+			a.innerHTML = ' ';
+			a.onclick = "nextGen(" + j + ")";
+
+			a.href = "#" + j;
+
+			genRow.appendChild(a);
+
 		}
+
+		d.appendChild(genRow);
+
 		// var e = document.createElement('p');
 		// e.innerHTML = m.fields[0].value;
 		// d.appendChild(e);
 	}
+
+	nextGen(0);
 
 });
 </script>
